@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Confirmación</title>
+    <link rel="stylesheet" href="/static/styles.css">
+    <style>
+        .confirmacion {
+            max-width: 500px;
+            margin: 100px auto;
+            padding: 40px;
+            background: white;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .confirmacion h2 {
+            margin-bottom: 20px;
+            font-size: 22px;
+        }
+        .volver-btn {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        .volver-btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="confirmacion">
+        {% if tipo == "llamada" %}
+            <h2>📣 Llamada registrada</h2>
+        {% elif tipo == "presencia" %}
+            <h2>✅ Presencia registrada</h2>
+        {% endif %}
+        <p>Habitación <strong>{{ habitacion }}</strong>, cama <strong>{{ cama.upper() }}</strong></p>
+        <br>
+        <a href="/panel" class="volver-btn">⬅ Volver al panel</a>
+    </div>
+</body>
+</html>

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Histórico de llamadas</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <h1>📋 Últimas llamadas y presencias</h1>
+
+    {% if nombre_asistente %}
+    <div style="text-align: center; margin-bottom: 15px;">
+        <strong>👋 Bienvenido/a, {{ nombre_asistente }}</strong>
+        |
+        <a href="/logout">
+            <button class="btn volver">Cerrar sesión</button>
+        </a>
+    </div>
+    {% endif %}
+
+    <div class="top-controls" style="text-align: center; margin-bottom: 15px;">
+        <a href="/panel">
+            <button class="btn volver">⬅ Volver al panel</button>
+        </a>
+        <a href="/historico/exportar">
+            <button class="btn volver">📄 Descargar CSV</button>
+        </a>
+    </div>
+
+    <div class="filtro-form" style="text-align: center; margin-bottom: 20px;">
+        <form method="get" action="/historico">
+            <label for="tipo">Tipo:</label>
+            <select name="tipo" id="tipo">
+                <option value="todos" {% if filtro_tipo == 'todos' %}selected{% endif %}>Todos</option>
+                <option value="llamada" {% if filtro_tipo == 'llamada' %}selected{% endif %}>Llamada</option>
+                <option value="presencia" {% if filtro_tipo == 'presencia' %}selected{% endif %}>Presencia</option>
+            </select>
+
+            <label for="habitacion">Habitación:</label>
+            <input type="text" name="habitacion" id="habitacion" value="{{ filtro_habitacion }}">
+
+            <button type="submit" class="btn filtrar">🔍 Filtrar</button>
+        </form>
+    </div>
+
+    <form method="get" action="/historico/borrar" style="text-align: center; margin-bottom: 20px;">
+        <button type="submit" class="btn borrar" onclick="return confirm('¿Estás seguro de que quieres borrar todo el histórico?')">
+            🗑 Borrar histórico
+        </button>
+    </form>
+
+    {% if registros %}
+    <table>
+        <thead>
+            <tr>
+                <th>Habitación</th>
+                <th>Cama</th>
+                <th>Fecha</th>
+                <th>Tipo</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for r in registros %}
+            <tr>
+                <td>{{ r[0] }}</td>
+                <td>{{ r[1] }}</td>
+                <td>{{ r[2] }}</td>
+                <td>{{ r[3] }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p style="text-align:center;">⚠️ No hay registros todavía.</p>
+    {% endif %}
+</body>
+</html>

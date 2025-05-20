@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Gestión de Asistentes</title>
+    <link rel="stylesheet" href="/static/styles.css">
+    <style>
+        input[type="text"], input[type="password"] {
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            width: 90%;
+            margin: 4px 0;
+        }
+        form.inline {
+            display: inline;
+        }
+        .acciones button {
+            margin: 2px;
+        }
+    </style>
+</head>
+<body>
+    <h1>⚙️ Gestión de Asistentes</h1>
+
+    {% if nombre_asistente %}
+    <div style="text-align: center; margin-bottom: 15px;">
+        <strong>👋 Bienvenido/a, {{ nombre_asistente }}</strong>
+        |
+        <a href="/logout"><button class="btn volver">Cerrar sesión</button></a>
+    </div>
+    {% endif %}
+
+    <div style="text-align: center; margin-bottom: 20px;">
+        <a href="/panel"><button class="btn volver">⬅ Volver al panel</button></a>
+    </div>
+
+    <h2>➕ Crear nuevo asistente</h2>
+    <form method="POST" action="/asistentes/crear">
+        <input type="text" name="nombre" placeholder="Nombre completo" required>
+        <input type="text" name="codigo" maxlength="6" minlength="6" placeholder="Código único (6 caracteres)" required>
+        <input type="password" name="contraseña" placeholder="Contraseña" required>
+        <button type="submit" class="btn filtrar">Crear asistente</button>
+    </form>
+
+    <h2 style="margin-top: 40px;">📋 Lista de asistentes registrados</h2>
+    {% if asistentes %}
+    <table>
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Código</th>
+                <th>Contraseña</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for asistente in asistentes %}
+            <tr>
+                <form method="POST" action="/asistentes/editar">
+                    <td>
+                        <input type="text" name="nombre" value="{{ asistente[1] }}" required>
+                    </td>
+                    <td>
+                        <input type="text" name="codigo" value="{{ asistente[2] }}" readonly>
+                    </td>
+                    <td>
+                        <input type="password" name="contraseña" value="{{ asistente[3] }}" required>
+                    </td>
+                    <td class="acciones">
+                        <button type="submit" class="btn presencia">💾 Guardar</button>
+                    </form>
+                    <form method="POST" action="/asistentes/eliminar" class="inline">
+                        <input type="hidden" name="codigo" value="{{ asistente[2] }}">
+                        <button type="submit" class="btn borrar" onclick="return confirm('¿Eliminar a {{ asistente[1] }}?')">🗑 Eliminar</button>
+                    </form>
+                    </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p style="text-align:center;">⚠️ No hay asistentes registrados aún.</p>
+    {% endif %}
+</body>
+</html>

@@ -1,0 +1,90 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #eef2f5;
+    padding: 20px;
+    color: #333;
+}
+h1, h2 {
+    text-align: center;
+    color: #2c3e50;
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+    border-radius: 6px;
+    overflow: hidden;
+}
+th, td {
+    border: 1px solid #e0e0e0;
+    padding: 12px;
+    text-align: center;
+}
+th {
+    background-color: #f8f9fa;
+    color: #495057;
+}
+tr:nth-child(even) {
+    background-color: #f6f8fa;
+}
+button, .btn {
+    padding: 10px 18px;
+    font-size: 14px;
+    font-weight: bold;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+.btn.llamar {
+    background-color: #007bff;
+    color: white;
+}
+.btn.llamar:hover {
+    background-color: #0056b3;
+}
+.btn.presencia {
+    background-color: #28a745;
+    color: white;
+}
+.btn.presencia:hover {
+    background-color: #1e7e34;
+}
+.btn.borrar {
+    background-color: #dc3545;
+    color: white;
+}
+.btn.borrar:hover {
+    background-color: #a71d2a;
+}
+.btn.volver, .btn.filtrar {
+    background-color: #6c757d;
+    color: white;
+}
+.btn.volver:hover, .btn.filtrar:hover {
+    background-color: #495057;
+}
+form {
+    text-align: center;
+    margin-bottom: 20px;
+}
+input[type="text"], select {
+    padding: 6px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
+.estado {
+    margin-top: 8px;
+    font-size: 13px;
+    color: #888;
+}
+.estado.llamada {
+    color: #dc3545;
+    font-weight: bold;
+}
+.estado.presencia {
+    color: #28a745;
+    font-weight: bold;
+}

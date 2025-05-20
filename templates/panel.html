@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Panel de llamadas</title>
+    <link rel="stylesheet" href="/static/styles.css">
+    <style>
+        .estado {
+            margin-top: 8px;
+            font-size: 13px;
+            color: #888;
+        }
+        .estado.llamada {
+            color: #dc3545;
+            font-weight: bold;
+        }
+        .estado.presencia {
+            color: #28a745;
+            font-weight: bold;
+        }
+        td.llamada {
+            background-color: #ffe5e5;
+        }
+        td.presencia {
+            background-color: #e6ffed;
+        }
+        .btn:disabled {
+            background-color: #ccc !important;
+            cursor: not-allowed;
+        }
+        .bombilla {
+            width: 30px;
+            display: block;
+            margin: 5px auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>📞 Panel de Llamadas Paciente-Enfermero</h1>
+
+    {% if nombre_asistente %}
+    <div style="text-align: center; margin-bottom: 15px;">
+        <strong>👋 Bienvenido/a, {{ nombre_asistente }}</strong>
+        |
+        <a href="/logout"><button class="btn volver">Cerrar sesión</button></a>
+    </div>
+    {% endif %}
+
+    <div style="text-align: center; margin-bottom: 20px;">
+        <a href="/historico"><button class="btn volver">📋 Ver histórico</button></a>
+        <a href="/asistencias"><button class="btn presencia">🕒 Asistencias del turno</button></a>
+        <a href="/asistentes"><button class="btn llamar">⚙️ Gestión de asistentes</button></a>
+    </div>
+
+    {% for planta in range(1, 6) %}
+        <h2>🟦 Planta {{ planta }}</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Habitación</th>
+                    <th>Cama A</th>
+                    <th>Cama B</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for i in range(1, 11) %}
+                    {% set habitacion = 100 + (planta - 1) * 10 + i %}
+                    <tr>
+                        <td><strong>Hab {{ habitacion }}</strong></td>
+
+                        {% for cama in ["a", "b"] %}
+                        <td id="celda-{{ habitacion }}-{{ cama }}">
+                            <a href="/llamada/{{ habitacion }}/{{ cama }}">
+                                <button class="btn llamar">📣 Llamar</button>
+                            </a>
+                            <a href="/presencia/{{ habitacion }}/{{ cama }}">
+                                <button class="btn presencia" id="btn-presencia-{{ habitacion }}-{{ cama }}" disabled>✅ Presencia</button>
+                            </a>
+                            <a href="/reset/{{ habitacion }}/{{ cama }}">
+                                <button class="btn volver" id="btn-reset-{{ habitacion }}-{{ cama }}">🔁 Incidencia resuelta</button>
+                            </a>
+                            <img id="bulbo-{{ habitacion }}-{{ cama }}" class="bombilla" src="/static/pic_bulboff.gif">
+                            <div class="estado" id="estado-{{ habitacion }}-{{ cama }}">Sin actividad</div>
+                        </td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endfor %}
+
+    <script>
+        function getCookie(nombre) {
+            const valor = `; ${document.cookie}`;
+            const partes = valor.split(`; ${nombre}=`);
+            if (partes.length === 2) return partes.pop().split(';').shift();
+        }
+
+        for (let planta = 1; planta <= 5; planta++) {
+            for (let i = 1; i <= 10; i++) {
+                const habitacion = 100 + (planta - 1) * 10 + i;
+                ["a", "b"].forEach(cama => {
+                    const clave = `estado_${habitacion}_${cama}`;
+                    const valor = getCookie(clave);
+                    const estadoDiv = document.getElementById(`estado-${habitacion}-${cama}`);
+                    const celda = document.getElementById(`celda-${habitacion}-${cama}`);
+                    const btnPresencia = document.getElementById(`btn-presencia-${habitacion}-${cama}`);
+                    const imgBulbo = document.getElementById(`bulbo-${habitacion}-${cama}`);
+
+                    if (valor === "llamada") {
+                        estadoDiv.textContent = "❗ Se está atendiendo una llamada";
+                        estadoDiv.classList.add("llamada");
+                        celda.classList.add("llamada");
+                        btnPresencia.disabled = false;
+                        imgBulbo.src = "/static/pic_bulbon.gif";
+                    } else if (valor === "presencia") {
+                        estadoDiv.textContent = "🟢 Se está atendiendo una presencia";
+                        estadoDiv.classList.add("presencia");
+                        celda.classList.add("presencia");
+                        btnPresencia.disabled = true;
+                        imgBulbo.src = "/static/pic_bulboff.gif";
+                    } else {
+                        estadoDiv.textContent = "Sin actividad";
+                        estadoDiv.classList.remove("presencia", "llamada");
+                        celda.classList.remove("presencia", "llamada");
+                        btnPresencia.disabled = true;
+                        imgBulbo.src = "/static/pic_bulboff.gif";
+                    }
+                });
+            }
+        }
+    </script>
+</body>
+</html>
